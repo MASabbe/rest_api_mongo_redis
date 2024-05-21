@@ -17,7 +17,7 @@ export const validate = (schema) => {
   return validation(schema, {context: true}, {abortEarly: false, errors: {stack: true, wrap: {label: '%'}}});
 };
 export const id = integer.min(1);
-export const idMember = string.alphanum().min(10).max(10);
+export const token = string.alphanum().min(32).max(32);
 export const username = string.pattern(/^([a-zA-Z0-9](?=.*[a-zA-Z]){1,20})(?:-([0-9]{1,4}))?/, 'username').min(3).max(25);
 export const email = string.email({
   minDomainSegments: 2, tlds: {allow: ['com', 'net', 'id']},
@@ -41,8 +41,6 @@ export const date = Joi.date().iso();
 export const type = integer.valid(1, 2, 3);
 export const status = integer.valid(0, 1, 2);
 export const rupiah = integer.integer().min(0).max(9999999999);
-export const bankType = string.valid('origin', 'other', 'virtual');
-export const withdrawalType = string.valid('bonus', 'reward', 'promo');
 export const boolean = Joi.bool();
 export const uuid = string.uuid();
 export const language = string.valid('en', 'id', 'jp');

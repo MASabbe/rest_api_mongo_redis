@@ -1,10 +1,9 @@
 import dotenv from 'dotenv';
-
-dotenv.config();
 export const env = process.env.NODE_ENV;
+dotenv.config();
 export const port = env === 'production'? process.env.PORT : 3001;
 export const appName = process.env.APP_NAME;
-export const appVersion = process.env.APP_VERSION;
+export const appVersion = Number(process.env.APP_VERSION);
 export const jwtSecret = process.env.APP_JWT_SECRET;
 export const jwtExpirationInterval = env === 'production' ? process.env.APP_JWT_EXPIRATION_MINUTES : 180;
 export const logs = env === 'production' ? 'combined' : 'dev';

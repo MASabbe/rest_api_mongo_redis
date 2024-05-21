@@ -1,5 +1,7 @@
 import express from 'express';
 import * as path from 'path';
+import authRoute from "./auth.route";
+import userRoute from "./user.route";
 const router = express.Router();
 /**
  * @api {get} /status Request server health status
@@ -24,4 +26,9 @@ router.get('/status', (req, res) => res.json({
 router.use('/docs', express.static(path.join(__dirname, '/../../../../public/docs/index.html')));
 // public static files
 router.use('/assets', express.static(path.join(__dirname, '/../../../../public/docs/assets')));
+/**
+ * APP
+ **/
+router.use('/auth', authRoute);
+router.use('/users', userRoute);
 export default router;

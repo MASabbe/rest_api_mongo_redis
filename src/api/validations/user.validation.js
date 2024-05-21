@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import {email, fullName, imageUri, language, list as baseList, phone, status, username} from './index';
+import {boolean, email, fullName, imageUri, language, list as baseList, phone, username} from './index';
 export const list= {
   query: baseList.keys({
     username: username,
@@ -16,7 +16,7 @@ export const updateData = {
     phone: phone,
     image: imageUri,
     language: language,
-    status: status,
+    status: boolean,
   }).or('firstName', 'lastName', 'email', 'phone', 'image', 'language', 'status'),
 };
 export const replaceData = {
@@ -27,7 +27,7 @@ export const replaceData = {
     phone: phone,
     image: imageUri,
     language: language,
-    status: status,
+    status: boolean,
   }).or('firstName', 'lastName', 'email', 'phone', 'image', 'language', 'status'),
 };
 // PATCH /v1/users/:userId/profile

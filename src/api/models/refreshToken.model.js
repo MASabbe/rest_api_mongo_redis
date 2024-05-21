@@ -4,29 +4,13 @@ import jwt from 'jwt-simple';
 import {jwtExpirationInterval, jwtSecret} from '../../config/vars';
 
 /**
- * Generates a token using the provided ID and Shakti.
- *
- * @param {type} id - The ID used to generate the token.
- * @param {boolean} shakti - The Shakti used to generate the token.
- * @return {string} The generated token.
- * @private
- */
-const token = (id, shakti) => {
-  const payload = {
-    exp: DateTime.utc().plus({minutes: jwtExpirationInterval}).toSeconds(),
-    iat: DateTime.utc().toSeconds(),
-    sub: id,
-    shakti: shakti,
-  };
-  return jwt.encode(payload, jwtSecret);
-};
-/**
  * Refresh Token Schema
  * @private
  */
 const refreshTokenSchema = new mongoose.Schema({
   token: {
     type: String,
+    unique: true,
     required: true,
     index: true,
   },
@@ -36,14 +20,42 @@ const refreshTokenSchema = new mongoose.Schema({
     required: true,
   },
   userEmail: {
-    type: 'String',
+    type: String,
     ref: 'User',
     required: true,
   },
-  expires: {type: Date},
+  shakti: {
+    type: Boolean,
+    default: false,
+  },
+  expiredAt: {
+    type: Date,
+    required: true,
+  }
+},{
+  timestamps: true,
 });
 
 refreshTokenSchema.statics = {
+  /**
+   * Generates a token using the provided ID and Shakti.
+   *
+   * @param {type} id - The ID used to generate the token.
+   * @param {boolean} shakti - The Shakti used to generate the token.
+   * @param {string} createdAt - Created at used to generate the token.
+   * @param {string} expiredAt - Expired at used to generate the token.
+   * @return {string} The generated token.
+   * @private
+   */
+  token(id, shakti, createdAt,expiredAt) {
+    const payload = {
+      exp: expiredAt,
+      iat: createdAt,
+      sub: id,
+      shakti: shakti,
+    };
+    return jwt.encode(payload, jwtSecret);
+  },
 
   /**
      * Generate a refresh token object and saves it into the database
@@ -52,12 +64,12 @@ refreshTokenSchema.statics = {
      * @returns {RefreshToken}
      */
   generate(user) {
-    const userId = user._id;
-    const userEmail = user.email;
-    const token = `${userId}.${crypto.randomBytes(40).toString('hex')}`;
-    const expires = moment().add(30, 'days').toDate();
+    const {_id,email,shakti} = user;
+    const createdAt = DateTime.utc().toSeconds();
+    const expiredAt = DateTime.utc().plus({day: jwtExpirationInterval}).toSeconds();
+    const token = this.token(_id, shakti, createdAt,expiredAt);
     const tokenObject = new RefreshToken({
-      token, userId, userEmail, expires,
+      token, userId:_id, userEmail: email, expiredAt,createdAt
     });
     tokenObject.save();
     return tokenObject;
@@ -69,3 +81,4 @@ refreshTokenSchema.statics = {
  * @typedef RefreshToken
  */
 const RefreshToken = mongoose.model('RefreshToken', refreshTokenSchema);
+export default RefreshToken;

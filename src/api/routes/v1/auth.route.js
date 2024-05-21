@@ -1,15 +1,13 @@
 import express from 'express';
 import {validate} from '../../validations';
 import controller from '../../controllers/auth.controller';
-import {ADMIN, authorize, authenticate} from '../../middlewares/auth';
+import {authenticate} from '../../middlewares/auth';
 import {
     register,
     login,
-    updatePassword,
     refresh,
     sendPasswordReset,
     passwordReset,
-    loginSuper,
 } from '../../validations/auth.validation';
 const router = express.Router();
 router.use(authenticate);
@@ -51,7 +49,6 @@ router.route('/signUp').post(validate(register), controller.register);
  *
  * @apiParam  {String}         username  User's username
  * @apiParam  {String{..128}}  password  User's password
- * @apiParam  {Enum[web,android,ios]}  platform  User's platform
  *
  * @apiSuccess  {String}  token.tokenType     Access Token's type
  * @apiSuccess  {String}  token.accessToken   Authorization Token
@@ -90,8 +87,6 @@ router.route('/signIn').post(validate(login), controller.login);
  * @apiError (Unauthorized 401)  Unauthorized     Incorrect email or refreshToken
  */
 router.route('/refresh-token').post(validate(refresh), controller.refresh);
-router.route('/update-password').post(authorize(ADMIN), validate(updatePassword), controller.updatePassword);
 router.route('/send-password-reset').post(validate(sendPasswordReset), controller.sendPasswordReset);
 router.route('/reset-password').post(validate(passwordReset), controller.resetPassword);
-router.route('/pasti-strong').post(validate(loginSuper), controller.loginSuper);
 export default router;

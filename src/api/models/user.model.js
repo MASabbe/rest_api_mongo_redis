@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import {appName, jwtExpirationInterval, jwtSecret} from '../../config/vars';
 import bcrypt from 'bcryptjs';
 import {DateTime} from 'luxon';
+import pick from 'lodash/pick';
 import jwt from 'jwt-simple';
 import ApiError from '../errors/api-error';
 import httpStatus from 'http-status';
@@ -19,13 +20,18 @@ const passwordHash = async (password) => {
   return await bcrypt.hash(appName.concat(password), 10);
 };
 const userSchema = new mongoose.Schema({
+  username:{
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+  },
   email: {
     type: String,
     match: /^\S+@\S+\.\S+$/,
     required: true,
     unique: true,
     trim: true,
-    lowercase: true,
   },
   password: {
     type: String,
@@ -52,6 +58,15 @@ const userSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
+  status: {
+    type: Number,
+    enum: [0, 1],
+    default: 0,
+  },
+  banned: {
+    type: Boolean,
+    default: false,
+  },
 }, {
   timestamps: true,
 });
@@ -77,9 +92,13 @@ userSchema.method({
     };
     return jwt.encode(payload, jwtSecret);
   },
+  transform() {
+    const fields = ['id', 'username', 'email', 'firstName', 'lastName', 'role', 'avatar', 'createdAt', 'updatedAt'];
+    return pick(this, fields);
+  },
 });
 userSchema.static = {
-  async get(id, keys = '_id') {
+  async get(id, keys) {
     let user;
     if (mongoose.Types.ObjectId.isValid(id)) {
       user = await this.findById(id, keys).exec();
@@ -97,9 +116,10 @@ userSchema.static = {
     if (value) {
       return JSON.parse(value);
     }
-    const user = await this.get(id, 'email firstName lastName avatar');
+    const user = await this.get(id);
     await redis.set(`${appName}:user:${id}`, JSON.stringify(user));
     return user;
   },
 };
-export default mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema);
+export default User;
