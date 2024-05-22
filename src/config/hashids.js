@@ -31,7 +31,7 @@ export const encodeHex = (data) => {
   return hashids.encodeHex(data);
 };
 export const decodeHex = (data) => {
-  return hashids.decodeHex(data)[0];
+  return hashids.decodeHex(data);
 };
 /**
  * Middleware function that encodes the response JSON object before sending it.
@@ -44,7 +44,7 @@ export const encodeMiddleware = (req, res, next) => {
   const _json = res.json;
   res.json = (obj) => {
     res.json = _json;
-    obj = replaceIds(obj, (v)=>encodeHex(v));
+    obj = replaceIds(obj, (v)=> encodeHex(v));
     return res.json(obj);
   };
   next();

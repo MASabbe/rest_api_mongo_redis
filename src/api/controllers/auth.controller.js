@@ -1,7 +1,6 @@
 import User from '../models/user.model';
 import RefreshToken from '../models/refreshToken.model';
 import httpStatus from 'http-status';
-import {omit} from 'lodash';
 import {jwtExpirationInterval} from '../../config/vars';
 import {DateTime} from 'luxon';
 import ApiError from '../errors/api-error';

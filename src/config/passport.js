@@ -2,7 +2,7 @@ import BearerStrategy from 'passport-http-bearer';
 import {ExtractJwt, Strategy as JWTStrategy} from 'passport-jwt';
 import {jwtSecret} from './vars';
 import authProviders from '../api/services/authProviders';
-import userModel from '../api/models/user.model';
+import User from '../api/models/user.model';
 
 const jwtOptions = {
   secretOrKey: jwtSecret,
@@ -11,7 +11,7 @@ const jwtOptions = {
 const oAuth = (service) => async (token, done) => {
   try {
     const userData = await authProviders[service](token);
-    const user = await userModel.oAuthLogin(userData);
+    const user = await User.oAuthLogin(userData);
     return done(null, user);
   } catch (err) {
     return done(err);
@@ -19,10 +19,10 @@ const oAuth = (service) => async (token, done) => {
 };
 export const jwt = new JWTStrategy(jwtOptions, async (payload, done)=>{
   try {
-    const user = await userModel.profile(payload.sub);
+    const user = await User.profile(payload.sub);
     if (user) {
-      if (user.hasOwnProperty('banned') && Number(user.banned) === 0) {
-        return done(null, {shakti: payload.shakti, su: payload.su, ...user});
+      if (user.hasOwnProperty('banned') && !user.banned) {
+        return done(null, user);
       }
       return done(new Error('User is banned'), false);
     }

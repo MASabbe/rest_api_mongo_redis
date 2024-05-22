@@ -17,7 +17,7 @@ export const validate = (schema) => {
   return validation(schema, {context: true}, {abortEarly: false, errors: {stack: true, wrap: {label: '%'}}});
 };
 export const id = integer.min(1);
-export const token = string.alphanum().min(32).max(32);
+export const token = string.pattern(/^[a-zA-Z0-9._-]+$/, 'token');
 export const username = string.pattern(/^([a-zA-Z0-9](?=.*[a-zA-Z]){1,20})(?:-([0-9]{1,4}))?/, 'username').min(3).max(25);
 export const email = string.email({
   minDomainSegments: 2, tlds: {allow: ['com', 'net', 'id']},

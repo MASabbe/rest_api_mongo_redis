@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import {DateTime} from 'luxon';
 import jwt from 'jwt-simple';
-import {jwtExpirationInterval, jwtSecret} from '../../config/vars';
+import {jwtSecret} from '../../config/vars';
 
 /**
  * Refresh Token Schema
@@ -65,11 +65,11 @@ refreshTokenSchema.statics = {
      */
   generate(user) {
     const {_id, email, shakti} = user;
-    const createdAt = DateTime.utc().toSeconds();
-    const expiredAt = DateTime.utc().plus({day: jwtExpirationInterval}).toSeconds();
-    const token = this.token(_id, shakti, createdAt, expiredAt);
+    const createdAt = DateTime.utc();
+    const expiredAt = DateTime.utc().plus({day: 3});
+    const token = this.token(_id, shakti, createdAt.toSeconds(), expiredAt.toSeconds());
     const tokenObject = new RefreshToken({
-      token, userId: _id, userEmail: email, expiredAt, createdAt,
+      token, userId: _id, userEmail: email, expiredAt: expiredAt.toISO()
     });
     tokenObject.save();
     return tokenObject;

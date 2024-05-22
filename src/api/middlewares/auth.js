@@ -26,9 +26,9 @@ const handleJWT = (req, res, next, roles) => async (err, user, info) => {
     return next(apiError);
   }
   if (roles === LOGGED_USER) {
-    if (hashids.decode(req.params.userId) !== user.id) {
+    if (hashids.decodeHex(req.params.userId) !== user.id) {
       apiError.status = httpStatus.FORBIDDEN;
-      apiError.message = 'Forbidden 1';
+      apiError.message = 'Forbidden';
       return next(apiError);
     }
   } else if (roles === ADMIN) {
