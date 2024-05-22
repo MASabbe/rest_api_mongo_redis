@@ -1,7 +1,7 @@
 import express from 'express';
 import * as path from 'path';
-import authRoute from "./auth.route";
-import userRoute from "./user.route";
+import authRoute from './auth.route';
+import userRoute from './user.route';
 const router = express.Router();
 /**
  * @api {get} /status Request server health status

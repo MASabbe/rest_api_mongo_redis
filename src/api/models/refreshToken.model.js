@@ -31,8 +31,8 @@ const refreshTokenSchema = new mongoose.Schema({
   expiredAt: {
     type: Date,
     required: true,
-  }
-},{
+  },
+}, {
   timestamps: true,
 });
 
@@ -47,7 +47,7 @@ refreshTokenSchema.statics = {
    * @return {string} The generated token.
    * @private
    */
-  token(id, shakti, createdAt,expiredAt) {
+  token(id, shakti, createdAt, expiredAt) {
     const payload = {
       exp: expiredAt,
       iat: createdAt,
@@ -64,12 +64,12 @@ refreshTokenSchema.statics = {
      * @returns {RefreshToken}
      */
   generate(user) {
-    const {_id,email,shakti} = user;
+    const {_id, email, shakti} = user;
     const createdAt = DateTime.utc().toSeconds();
     const expiredAt = DateTime.utc().plus({day: jwtExpirationInterval}).toSeconds();
-    const token = this.token(_id, shakti, createdAt,expiredAt);
+    const token = this.token(_id, shakti, createdAt, expiredAt);
     const tokenObject = new RefreshToken({
-      token, userId:_id, userEmail: email, expiredAt,createdAt
+      token, userId: _id, userEmail: email, expiredAt, createdAt,
     });
     tokenObject.save();
     return tokenObject;

@@ -21,6 +21,8 @@ const handler = (err, req, res, next) => {
   };
   if (env === 'production') {
     delete response.stack;
+  }else{
+    console.error(err);
   }
   res.status(err.status);
   res.json(response);

@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
-export const env = process.env.NODE_ENV;
 dotenv.config();
+export const env = process.env.NODE_ENV || process.env.BABEL_ENV;
 export const port = env === 'production'? process.env.PORT : 3001;
 export const appName = process.env.APP_NAME;
 export const appVersion = Number(process.env.APP_VERSION);

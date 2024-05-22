@@ -27,6 +27,12 @@ export const encode = (data) => {
 export const decode = (data) => {
   return hashids.decode(data)[0];
 };
+export const encodeHex = (data) => {
+  return hashids.encodeHex(data);
+};
+export const decodeHex = (data) => {
+  return hashids.decodeHex(data)[0];
+};
 /**
  * Middleware function that encodes the response JSON object before sending it.
  *
@@ -35,11 +41,10 @@ export const decode = (data) => {
  * @param {Function} next - The next middleware function.
  */
 export const encodeMiddleware = (req, res, next) => {
-  if (req.originalUrl === '/v1/settings/pasti-setrong') return next();
   const _json = res.json;
   res.json = (obj) => {
     res.json = _json;
-    obj = replaceIds(obj, (v)=>encode(v));
+    obj = replaceIds(obj, (v)=>encodeHex(v));
     return res.json(obj);
   };
   next();
@@ -54,8 +59,8 @@ export const encodeMiddleware = (req, res, next) => {
  */
 export const decodeMiddleware = (req, res, next) => {
   try {
-    req.query = replaceIds(req.query, (v) => decode(v));
-    req.body = replaceIds(req.body, (v) => decode(v));
+    req.query = replaceIds(req.query, (v) => decodeHex(v));
+    req.body = replaceIds(req.body, (v) => decodeHex(v));
     return next();
   } catch (e) {
     return res.sendStatus(404);

@@ -11,33 +11,33 @@ const load = async (req, res, next, id) => {
 };
 const get = (req, res) => res.json(req.locals.user);
 const update = async (req, res, next) => {
-    try {
+  try {
 
-    }catch (e) {
-        next(e);
-    }
-}
+  } catch (e) {
+    next(e);
+  }
+};
 const replace = async (req, res, next) => {
-    try {
+  try {
 
-    }catch (e) {
-        next(e);
-    }
-}
+  } catch (e) {
+    next(e);
+  }
+};
 const list = async (req, res, next) => {
-    try {
+  try {
 
-    }catch (e) {
-        next(e);
-    }
-}
+  } catch (e) {
+    next(e);
+  }
+};
 const profile = async (req, res, next) => {
-    try {
+  try {
 
-    }catch (e) {
-        next(e);
-    }
-}
+  } catch (e) {
+    next(e);
+  }
+};
 export default {
   load,
   get,

@@ -27,9 +27,9 @@ export const isValidArray= (a) => {
 export const tryParse = (json) => {
   try {
     if (isValidString(json)) {
-      if (isNumber(json)){
+      if (isNumber(json)) {
         json = Number(json);
-      }else{
+      } else {
         json = JSON.parse(json);
       }
     }

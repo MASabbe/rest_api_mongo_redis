@@ -9,7 +9,7 @@
     "prestart": "pnpm docs",
     "lint": "eslint ./src/** --ext .js",
     "lint:fix": "eslint ./src/** --ext .js --fix",
-    "dev:server": "babel-node ./src/index.js NODE_ENV=development",
+    "dev:server": "BABEL_ENV=development babel-node ./src/index.js",
     "clean": "rm -rf dist",
     "docs": "apidoc -i src -o public/docs",
     "build": "pnpm run clean && babel ./src --out-dir dist --copy-files",
@@ -36,7 +36,7 @@
     "apidoc": "^1.2.0",
     "eslint": "^8.57.0",
     "eslint-config-google": "^0.14.0",
-    "jest": "^29.7.0",
+    "jest": "^29.7.0"
   },
   "dependencies": {
     "axios": "^1.7.1",

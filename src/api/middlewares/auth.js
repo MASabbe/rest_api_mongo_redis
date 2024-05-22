@@ -38,11 +38,6 @@ const handleJWT = (req, res, next, roles) => async (err, user, info) => {
       return next(apiError);
     }
   }
-  // if (user.shakti && !user.su) {
-  //   apiError.status = httpStatus.FORBIDDEN;
-  //   apiError.message = 'Forbidden 3';
-  //   return next(apiError);
-  // }
   req.user = user;
   return next();
 };

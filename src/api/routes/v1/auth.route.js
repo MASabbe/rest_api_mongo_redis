@@ -3,11 +3,11 @@ import {validate} from '../../validations';
 import controller from '../../controllers/auth.controller';
 import {authenticate} from '../../middlewares/auth';
 import {
-    register,
-    login,
-    refresh,
-    sendPasswordReset,
-    passwordReset,
+  register,
+  login,
+  refresh,
+  sendPasswordReset,
+  passwordReset,
 } from '../../validations/auth.validation';
 const router = express.Router();
 router.use(authenticate);
