@@ -1,6 +1,6 @@
 import User from '../models/user.model';
 import {decodeHex} from '../../config/hashids';
-import httpStatus from "http-status";
+import httpStatus from 'http-status';
 const load = async (req, res, next, id) => {
   try {
     const user = await User.profile(decodeHex(id));

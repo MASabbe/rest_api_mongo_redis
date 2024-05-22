@@ -69,7 +69,7 @@ refreshTokenSchema.statics = {
     const expiredAt = DateTime.utc().plus({day: 3});
     const token = this.token(_id, shakti, createdAt.toSeconds(), expiredAt.toSeconds());
     const tokenObject = new RefreshToken({
-      token, userId: _id, userEmail: email, expiredAt: expiredAt.toISO()
+      token, userId: _id, userEmail: email, expiredAt: expiredAt.toISO(),
     });
     tokenObject.save();
     return tokenObject;

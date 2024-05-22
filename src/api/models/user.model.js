@@ -8,7 +8,7 @@ import ApiError from '../errors/api-error';
 import httpStatus from 'http-status';
 import redis from '../../config/redis';
 import RefreshToken from './refreshToken.model';
-import {isNotEmpty, now} from "../../helper/Util.helper";
+import {isNotEmpty, now} from '../../helper/Util.helper';
 
 const roles = ['admin', 'user'];
 const passwordHash = async (password) => await bcrypt.hash(password, 10);
@@ -112,7 +112,7 @@ userSchema.method({
     return jwt.encode(payload, jwtSecret);
   },
   transform() {
-    const fields = ['id', 'username', 'email', 'firstName', 'lastName', 'role', 'avatar', 'status','banned','createdAt', 'updatedAt'];
+    const fields = ['id', 'username', 'email', 'firstName', 'lastName', 'role', 'avatar', 'status', 'banned', 'createdAt', 'updatedAt'];
     return pick(this, fields);
   },
 });
@@ -150,10 +150,10 @@ userSchema.statics = {
     if (value) {
       return JSON.parse(value);
     }
-    const user = await this.get(id).then(user => user.transform());
-    await redis.set(`${appName}:user:${id}`, JSON.stringify(user),{
+    const user = await this.get(id).then((user) => user.transform());
+    await redis.set(`${appName}:user:${id}`, JSON.stringify(user), {
       EX: 1800,
-      NX: true
+      NX: true,
     });
     return user;
   },
@@ -218,13 +218,13 @@ userSchema.statics = {
         code: 1006,
       });
     }
-    return { user, accessToken: user.token() };
+    return {user, accessToken: user.token()};
   },
   async list(query) {
-    const {page,perPage,search,dir,username,email,firstName,lastName} = query;
+    const {page, perPage, search, dir, username, email, firstName, lastName} = query;
     const orderBy = dir === 'asc' ? 1 : -1;
     const conditions = {};
-    if (isNotEmpty(search)){
+    if (isNotEmpty(search)) {
       conditions.$or = [
         {username: {$regex: search, $options: 'i'}},
         {email: {$regex: search, $options: 'i'}},
@@ -232,27 +232,27 @@ userSchema.statics = {
         {lastName: {$regex: search, $options: 'i'}},
       ];
     }
-    if (isNotEmpty(username)){
+    if (isNotEmpty(username)) {
       conditions.username = username;
     }
-    if (isNotEmpty(email)){
+    if (isNotEmpty(email)) {
       conditions.email = email;
     }
-    if (isNotEmpty(firstName)){
+    if (isNotEmpty(firstName)) {
       conditions.firstName = firstName;
     }
-    if (isNotEmpty(lastName)){
+    if (isNotEmpty(lastName)) {
       conditions.lastName = lastName;
     }
     const data = await this.find(conditions)
-        .sort({ createdAt: orderBy })
+        .sort({createdAt: orderBy})
         .skip(perPage * (page - 1))
         .limit(perPage)
         .exec();
     const total = await this.countDocuments();
     const filtered = isNotEmpty(search) || isNotEmpty(username) || isNotEmpty(email) || isNotEmpty(firstName) || isNotEmpty(lastName) ? await this.countDocuments(conditions) : 0;
     return {
-      data: data.map(v=>v.transform()),
+      data: data.map((v)=>v.transform()),
       recordsTotal: total,
       recordsFiltered: filtered,
     };

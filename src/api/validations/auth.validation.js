@@ -20,7 +20,6 @@ export const login = {
 // POST /v1/auth/google
 export const oAuth = {
   body: Joi.object().keys({
-    username: username.required(),
     accessToken: token.required(),
   }).required(),
 };
@@ -35,7 +34,8 @@ export const refresh = {
 // POST /v1/auth/refresh
 export const sendPasswordReset = {
   body: Joi.object().keys({
-    email: email.required(),
+    email: email,
+    username: username.when('email', {is: Joi.exist(), then: Joi.optional(), otherwise: Joi.required()}),
   }).required(),
 };
 // POST /v1/auth/password-reset

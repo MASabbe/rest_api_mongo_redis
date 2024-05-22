@@ -17,4 +17,7 @@ export const mongolConfig = {
   'slaveHost': process.env.MONGO_SLAVE_HOST,
   'db': process.env.MONGO_DATABASE,
 };
-export const passwordShakti = process.env.APP_PASSWORD_SAKTI;
+export const smtpConfig = {
+  'email': process.env.APP_GMAIL,
+  'password': process.env.APP_GMAIL_PASS,
+};

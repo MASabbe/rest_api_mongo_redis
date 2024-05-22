@@ -7,9 +7,9 @@ import isNumber from 'lodash/isNumber';
 import isObject from 'lodash/isObject';
 import isArray from 'lodash/isArray';
 import isEmpty from 'lodash/isEmpty';
-import {DateTime} from "luxon";
+import {DateTime} from 'luxon';
 
-export const now = DateTime.utc()
+export const now = DateTime.utc();
 export const isNotEmpty = (a) => {
   return !isNull(a) && !isEmpty(isValidNumber(a) ? a.toString() :a ) && !isUndefined(a);
 };

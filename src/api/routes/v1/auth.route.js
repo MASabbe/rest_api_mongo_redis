@@ -1,13 +1,14 @@
 import express from 'express';
 import {validate} from '../../validations';
 import controller from '../../controllers/auth.controller';
-import {authenticate} from '../../middlewares/auth';
+import {authenticate, oAuth as oAuthLogin} from '../../middlewares/auth';
 import {
   register,
   login,
   refresh,
   sendPasswordReset,
   passwordReset,
+  oAuth,
 } from '../../validations/auth.validation';
 const router = express.Router();
 router.use(authenticate);
@@ -86,7 +87,11 @@ router.route('/signIn').post(validate(login), controller.login);
  * @apiError (Bad Request 400)  ValidationError  Some parameters may contain invalid values
  * @apiError (Unauthorized 401)  Unauthorized     Incorrect email or refreshToken
  */
+
+router.route('/facebook').post(validate(oAuth), oAuthLogin('facebook'), controller.oAuth);
+router.route('/google').post(validate(oAuth), oAuthLogin('facebook'), controller.oAuth);
+
 router.route('/refresh-token').post(validate(refresh), controller.refresh);
-router.route('/send-password-reset').post(validate(sendPasswordReset), controller.sendPasswordReset);
+router.route('/request-password-reset').post(validate(sendPasswordReset), controller.sendPasswordReset);
 router.route('/reset-password').post(validate(passwordReset), controller.resetPassword);
 export default router;
