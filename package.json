@@ -55,7 +55,7 @@
     "joi": "^17.13.1",
     "joi-phone-number": "^5.1.1",
     "jwt-simple": "^0.5.6",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "luxon": "^3.4.4",
     "method-override": "^3.0.0",
     "mongoose": "^8.4.0",
